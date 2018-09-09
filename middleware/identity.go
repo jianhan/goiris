@@ -1,4 +1,4 @@
-package identity
+package middleware
 
 import (
 	"time"
@@ -8,17 +8,15 @@ import (
 	"github.com/jianhan/goiris/bootstrap"
 )
 
-// New returns a new handler which adds some headers and view data
+// NewAppHeaders a new handler which adds some headers and view data
 // describing the application, i.e the owner, the startup time.
-func New(b *bootstrap.Bootstrapper) iris.Handler {
+func NewAppHeaders(b *bootstrap.Bootstrapper) iris.Handler {
 	return func(ctx iris.Context) {
 		// response headers
 		ctx.Header("App-Name", b.AppName)
 		ctx.Header("App-Owner", b.AppOwner)
 		ctx.Header("App-Since", time.Since(b.AppSpawnDate).String())
-
-		ctx.Header("Server", "Iris: https://iris-go.com")
-
+		ctx.Header("Server", b.Env.Address())
 		// view data if ctx.View or c.Tmpl = "$page.html" will be called next.
 		ctx.ViewData("AppName", b.AppName)
 		ctx.ViewData("AppOwner", b.AppOwner)
@@ -26,8 +24,8 @@ func New(b *bootstrap.Bootstrapper) iris.Handler {
 	}
 }
 
-// Configure creates a new identity middleware and registers that to the app.
-func Configure(b *bootstrap.Bootstrapper) {
-	h := New(b)
+// AppHeadersConfigure creates a new identity middleware and registers that to the app.
+func AppHeadersConfigure(b *bootstrap.Bootstrapper) {
+	h := NewAppHeaders(b)
 	b.UseGlobal(h)
 }

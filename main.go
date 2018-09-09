@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"github.com/jianhan/goiris/bootstrap"
-	"github.com/jianhan/goiris/middleware/identity"
+	"github.com/jianhan/goiris/middleware"
 	"github.com/jianhan/goiris/routes"
+	"github.com/kataras/iris"
 	"github.com/sirupsen/logrus"
 )
 
@@ -14,10 +16,18 @@ func newApp() *bootstrap.Bootstrapper {
 	}
 	logrus.Info(envs)
 
-	return bootstrap.New(envs, identity.Configure, routes.Configure).Bootstrap()
+	return bootstrap.New(envs, middleware.AppHeadersConfigure, routes.Configure).Bootstrap()
 }
 
 func main() {
-	app := newApp()
-	app.Listen(":8888")
+	newApp().Listen(
+		fmt.Sprintf(":%d", app.Env.Port),
+		// disables updates:
+		iris.WithoutVersionChecker,
+		// skip err server closed when CTRL/CMD+C pressed:
+		iris.WithoutServerError(iris.ErrServerClosed),
+		// enables faster json serialization and more:
+		iris.WithOptimizations,
+	)
+
 }
