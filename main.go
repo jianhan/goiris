@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/jianhan/goiris/bootstrap"
 	"github.com/jianhan/goiris/middleware"
 	"github.com/jianhan/goiris/routes"
@@ -21,7 +20,6 @@ func newApp() *bootstrap.Bootstrapper {
 
 func main() {
 	newApp().Listen(
-		fmt.Sprintf(":%d", app.Env.Port),
 		// disables updates:
 		iris.WithoutVersionChecker,
 		// skip err server closed when CTRL/CMD+C pressed:

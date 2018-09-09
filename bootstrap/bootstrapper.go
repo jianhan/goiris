@@ -1,6 +1,7 @@
 package bootstrap
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/gorilla/securecookie"
@@ -126,6 +127,6 @@ func (b *Bootstrapper) Bootstrap() *Bootstrapper {
 }
 
 // Listen starts the http server with the specified "addr".
-func (b *Bootstrapper) Listen(addr string, cfgs ...iris.Configurator) {
-	b.Run(iris.Addr(addr), cfgs...)
+func (b *Bootstrapper) Listen(cfgs ...iris.Configurator) {
+	b.Run(iris.Addr(fmt.Sprintf(":%d", b.Env.Port)), cfgs...)
 }
