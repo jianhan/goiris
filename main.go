@@ -27,5 +27,4 @@ func main() {
 		// enables faster json serialization and more:
 		iris.WithOptimizations,
 	)
-
 }

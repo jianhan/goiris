@@ -3,7 +3,7 @@ module github.com/jianhan/goiris
 require (
 	cloud.google.com/go v0.27.0 // indirect
 	contrib.go.opencensus.io/exporter/stackdriver v0.6.0 // indirect
-	firebase.google.com/go v3.3.0+incompatible // indirect
+	firebase.google.com/go v3.3.0+incompatible
 	github.com/BurntSushi/toml v0.3.0 // indirect
 	github.com/Joker/jade v0.7.0 // indirect
 	github.com/Shopify/goreferrer v0.0.0-20180807163728-b9777dc9f9cc // indirect
@@ -40,11 +40,11 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	go.opencensus.io v0.15.0 // indirect
 	golang.org/x/crypto v0.0.0-20180904163835-0709b304e793 // indirect
-	golang.org/x/net v0.0.0-20180906233101-161cd47e91fd // indirect
+	golang.org/x/net v0.0.0-20180906233101-161cd47e91fd
 	golang.org/x/oauth2 v0.0.0-20180821212333-d2e6202438be // indirect
 	golang.org/x/sys v0.0.0-20180907202204-917fdcba135d // indirect
 	golang.org/x/text v0.3.0 // indirect
-	google.golang.org/api v0.0.0-20180909000514-6b0ababeb16a // indirect
+	google.golang.org/api v0.0.0-20180909000514-6b0ababeb16a
 	google.golang.org/genproto v0.0.0-20180831171423-11092d34479b // indirect
 	google.golang.org/grpc v1.14.0 // indirect
 	gopkg.in/russross/blackfriday.v2 v2.0.0 // indirect
