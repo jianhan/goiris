@@ -5,6 +5,6 @@ import (
 )
 
 // Configure registers the necessary routes to the app.
-func Configure(b *bootstrap.Bootstrapper) {
+func Configure(b *bootstrap.bootstrapper) {
 	b.Get("/", GetIndexHandler)
 }

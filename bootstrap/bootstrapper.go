@@ -13,10 +13,16 @@ import (
 )
 
 // Configurator is functional options for configurations of bootstrap
-type Configurator func(*Bootstrapper)
+type Configurator func(*bootstrapper)
 
-// Bootstrapper setup app.
-type Bootstrapper struct {
+type Bootstrapper interface {
+	Bootstrap() Bootstrapper
+	Configure(cs ...Configurator)
+	Listen(addr string, cfgs ...iris.Configurator)
+}
+
+// bootstrapper setup app.
+type bootstrapper struct {
 	*iris.Application
 	AppName       string
 	AppOwner      string
@@ -26,9 +32,9 @@ type Bootstrapper struct {
 	Env           *Env
 }
 
-// New returns a new Bootstrapper.
-func New(env *Env, cfgs ...Configurator) *Bootstrapper {
-	b := &Bootstrapper{
+// New returns a new bootstrapper.
+func New(env *Env, cfgs ...Configurator) Bootstrapper {
+	b := &bootstrapper{
 		AppName:       env.AppName,
 		AppOwner:      env.AppOwner,
 		AppOwnerEmail: env.AppOwnerEmail,
@@ -44,13 +50,13 @@ func New(env *Env, cfgs ...Configurator) *Bootstrapper {
 	return b
 }
 
-// SetupViews loads the templates.
-func (b *Bootstrapper) SetupViews(viewsDir string) {
+// setupViews loads the templates.
+func (b *bootstrapper) setupViews(viewsDir string) {
 	b.RegisterView(iris.HTML(viewsDir, ".html").Layout("shared/layout.html"))
 }
 
-// SetupSessions initializes the sessions, optionally.
-func (b *Bootstrapper) SetupSessions(expires time.Duration, cookieHashKey, cookieBlockKey []byte) {
+// setupSessions initializes the sessions, optionally.
+func (b *bootstrapper) setupSessions(expires time.Duration, cookieHashKey, cookieBlockKey []byte) {
 	b.Sessions = sessions.New(sessions.Config{
 		Cookie:   "SECRET_SESS_COOKIE_" + b.AppName,
 		Expires:  expires,
@@ -58,8 +64,8 @@ func (b *Bootstrapper) SetupSessions(expires time.Duration, cookieHashKey, cooki
 	})
 }
 
-// SetupWebsockets prepares the websocket server.
-func (b *Bootstrapper) SetupWebsockets(endpoint string, onConnection websocket.ConnectionFunc) {
+// setupWebsockets prepares the websocket server.
+func (b *bootstrapper) setupWebsockets(endpoint string, onConnection websocket.ConnectionFunc) {
 	ws := websocket.New(websocket.Config{})
 	ws.OnConnection(onConnection)
 
@@ -69,9 +75,9 @@ func (b *Bootstrapper) SetupWebsockets(endpoint string, onConnection websocket.C
 	})
 }
 
-// SetupErrorHandlers prepares the http error handlers
+// setupErrorHandlers prepares the http error handlers
 // `(context.StatusCodeNotSuccessful`,  which defaults to < 200 || >= 400 but you can change it).
-func (b *Bootstrapper) SetupErrorHandlers() {
+func (b *bootstrapper) setupErrorHandlers() {
 	b.OnAnyErrorCode(func(ctx iris.Context) {
 		err := iris.Map{
 			"app":     b.AppName,
@@ -98,7 +104,7 @@ const (
 )
 
 // Configure accepts configurations and runs them inside the Bootstraper's context.
-func (b *Bootstrapper) Configure(cs ...Configurator) {
+func (b *bootstrapper) Configure(cs ...Configurator) {
 	for _, c := range cs {
 		c(b)
 	}
@@ -106,13 +112,13 @@ func (b *Bootstrapper) Configure(cs ...Configurator) {
 
 // Bootstrap prepares our application.
 // Returns itself.
-func (b *Bootstrapper) Bootstrap() *Bootstrapper {
-	b.SetupViews("./views")
-	b.SetupSessions(24*time.Hour,
+func (b *bootstrapper) Bootstrap() Bootstrapper {
+	b.setupViews("./views")
+	b.setupSessions(24*time.Hour,
 		[]byte(b.Env.CookieHashKey),
 		[]byte(b.Env.CookieBlockKey),
 	)
-	b.SetupErrorHandlers()
+	b.setupErrorHandlers()
 
 	// static files
 	b.Favicon(StaticAssets + Favicon)
@@ -126,6 +132,6 @@ func (b *Bootstrapper) Bootstrap() *Bootstrapper {
 }
 
 // Listen starts the http server with the specified "addr".
-func (b *Bootstrapper) Listen(addr string, cfgs ...iris.Configurator) {
+func (b *bootstrapper) Listen(addr string, cfgs ...iris.Configurator) {
 	b.Run(iris.Addr(addr), cfgs...)
 }
