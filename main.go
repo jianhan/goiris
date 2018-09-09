@@ -5,15 +5,14 @@ import (
 	"github.com/jianhan/goiris/middleware"
 	"github.com/jianhan/goiris/routes"
 	"github.com/kataras/iris"
-	"github.com/sirupsen/logrus"
 )
 
+// newApp returns a new bootstrapper instance.
 func newApp() *bootstrap.Bootstrapper {
 	envs, err := bootstrap.EnvConfigs()
 	if err != nil {
 		panic(err)
 	}
-	logrus.Info(envs)
 
 	return bootstrap.New(envs, middleware.AppHeadersConfigure, middleware.APIHeadersConfigure, routes.Configure).Bootstrap()
 }

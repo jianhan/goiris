@@ -73,6 +73,7 @@ func (s *GoogleSearchRequest) GenerateNearBySearchRequestOptions() ([]googleplac
 
 	return options
 }
+
 func GetGooglePlaceHandler(ctx iris.Context) {
 	// query string to struct
 	searchRequest := new(GoogleSearchRequest)
