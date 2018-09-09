@@ -19,6 +19,7 @@ require (
 	github.com/hashicorp/go-version v1.0.0 // indirect
 	github.com/iris-contrib/formBinder v0.0.0-20171010160137-ad9fb86c356f // indirect
 	github.com/iris-contrib/go.uuid v2.0.0+incompatible // indirect
+	github.com/iris-contrib/middleware v0.0.0-20180802233605-d0897469986f
 	github.com/joho/godotenv v1.2.0
 	github.com/json-iterator/go v1.1.5 // indirect
 	github.com/juju/errors v0.0.0-20180806074554-22422dad46e1 // indirect

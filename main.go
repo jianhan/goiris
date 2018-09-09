@@ -26,5 +26,6 @@ func main() {
 		iris.WithoutServerError(iris.ErrServerClosed),
 		// enables faster json serialization and more:
 		iris.WithOptimizations,
+		iris.WithoutStartupLog,
 	)
 }
