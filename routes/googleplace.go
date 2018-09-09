@@ -9,7 +9,6 @@ import (
 	ghttp "github.com/jianhan/goiris/http"
 	"github.com/kataras/iris"
 	"github.com/leebenson/conform"
-	"github.com/sirupsen/logrus"
 	"gopkg.in/go-playground/validator.v9"
 	"net/http"
 )
@@ -79,7 +78,7 @@ func GetGooglePlaceHandler(ctx iris.Context) {
 	searchRequest := new(GoogleSearchRequest)
 	schema.NewDecoder().Decode(searchRequest, ctx.Request().URL.Query())
 	conform.Strings(&searchRequest)
-	jsonStr, err := json.Marshal(&searchRequest)
+	_, err := json.Marshal(&searchRequest)
 	if err != nil {
 		ctx.StatusCode(iris.StatusBadRequest)
 		ctx.JSON(
@@ -90,7 +89,6 @@ func GetGooglePlaceHandler(ctx iris.Context) {
 		)
 		return
 	}
-	logrus.Info(jsonStr)
 
 	// validation
 	if err = validator.New().Struct(*searchRequest); err != nil {
@@ -149,6 +147,7 @@ func GetGooglePlaceHandler(ctx iris.Context) {
 		return
 	}
 
+	// call API
 	sRsp, sErr := client.NearbySearch(context.Background(), nsReq)
 	if sErr != nil {
 		ctx.StatusCode(iris.StatusInternalServerError)
@@ -161,6 +160,7 @@ func GetGooglePlaceHandler(ctx iris.Context) {
 		return
 	}
 
+	// return response
 	ctx.StatusCode(iris.StatusOK)
 	ctx.JSON(sRsp)
 }
