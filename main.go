@@ -7,7 +7,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func newApp() bootstrap.Bootstrapper {
+func newApp() *bootstrap.Bootstrapper {
 	envs, err := bootstrap.EnvConfigs()
 	if err != nil {
 		panic(err)
