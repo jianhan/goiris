@@ -29,6 +29,7 @@ func Configure(b *bootstrap.Bootstrapper) {
 		zomatoRoutes := apiV1Routes.Party("/zomato")
 		{
 			zomatoRoutes.Get("/categories", cacheHandler, GetZomatoCategoriesHandler)
+			zomatoRoutes.Get("/cities", cacheHandler, GetZomatoCategoriesHandler)
 		}
 	}
 }
