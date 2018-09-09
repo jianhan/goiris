@@ -15,7 +15,7 @@ func newApp() *bootstrap.Bootstrapper {
 	}
 	logrus.Info(envs)
 
-	return bootstrap.New(envs, middleware.AppHeadersConfigure, routes.Configure).Bootstrap()
+	return bootstrap.New(envs, middleware.AppHeadersConfigure, middleware.APIHeadersConfigure, routes.Configure).Bootstrap()
 }
 
 func main() {
