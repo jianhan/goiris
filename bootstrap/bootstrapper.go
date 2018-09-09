@@ -34,6 +34,7 @@ func New(env *Env, cfgs ...Configurator) *Bootstrapper {
 		AppOwnerEmail: env.AppOwnerEmail,
 		AppSpawnDate:  time.Now(),
 		Application:   iris.New(),
+		Env:           env,
 	}
 
 	for _, cfg := range cfgs {
