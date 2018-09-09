@@ -12,24 +12,28 @@ import (
 	"github.com/kataras/iris/websocket"
 )
 
+// Configurator is functional options for configurations of bootstrap
 type Configurator func(*Bootstrapper)
 
+// Bootstrapper setup app.
 type Bootstrapper struct {
 	*iris.Application
-	AppName      string
-	AppOwner     string
-	AppSpawnDate time.Time
-
-	Sessions *sessions.Sessions
+	AppName       string
+	AppOwner      string
+	AppOwnerEmail string
+	AppSpawnDate  time.Time
+	Sessions      *sessions.Sessions
+	Env           *Env
 }
 
 // New returns a new Bootstrapper.
-func New(appName, appOwner string, cfgs ...Configurator) *Bootstrapper {
+func New(env *Env, cfgs ...Configurator) *Bootstrapper {
 	b := &Bootstrapper{
-		AppName:      appName,
-		AppOwner:     appOwner,
-		AppSpawnDate: time.Now(),
-		Application:  iris.New(),
+		AppName:       env.AppName,
+		AppOwner:      env.AppOwner,
+		AppOwnerEmail: env.AppOwnerEmail,
+		AppSpawnDate:  time.Now(),
+		Application:   iris.New(),
 	}
 
 	for _, cfg := range cfgs {
@@ -100,13 +104,12 @@ func (b *Bootstrapper) Configure(cs ...Configurator) {
 }
 
 // Bootstrap prepares our application.
-//
 // Returns itself.
 func (b *Bootstrapper) Bootstrap() *Bootstrapper {
 	b.SetupViews("./views")
 	b.SetupSessions(24*time.Hour,
-		[]byte("the-big-and-secret-fash-key-here"),
-		[]byte("lot-secret-of-characters-big-too"),
+		[]byte(b.Env.CookieHashKey),
+		[]byte(b.Env.CookieBlockKey),
 	)
 	b.SetupErrorHandlers()
 
