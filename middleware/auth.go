@@ -11,7 +11,7 @@ func Auth(ctx iris.Context) {
 	idToken := ctx.GetHeader("Authorization")
 	if idToken == "" {
 		ctx.StatusCode(iris.StatusUnauthorized)
-		ctx.JSON(iris.Map{"status": iris.StatusUnauthorized, "message": "Unauthorized"})
+		ctx.JSON(iris.Map{"status": iris.StatusUnauthorized, "message": "unauthorized"})
 		return
 	}
 
@@ -20,7 +20,7 @@ func Auth(ctx iris.Context) {
 	idToken = strings.Trim(splitToken[1], " ")
 	if idToken == "" {
 		ctx.StatusCode(iris.StatusUnauthorized)
-		ctx.JSON(iris.Map{"status": iris.StatusUnauthorized, "message": "Unauthorized, id token is missing"})
+		ctx.JSON(iris.Map{"status": iris.StatusUnauthorized, "message": "unauthorized, id token is missing"})
 		return
 	}
 
@@ -28,7 +28,7 @@ func Auth(ctx iris.Context) {
 	firebaseApp, err := firebase.NewFirebaseApp()
 	if err != nil {
 		ctx.StatusCode(iris.StatusInternalServerError)
-		ctx.JSON(iris.Map{"status": iris.StatusInternalServerError, "message": "Internal server error, unable to authenticate user"})
+		ctx.JSON(iris.Map{"status": iris.StatusInternalServerError, "message": "internal server error, unable to authenticate user"})
 		return
 	}
 
@@ -36,14 +36,14 @@ func Auth(ctx iris.Context) {
 	client, err := firebaseApp.Auth(context.Background())
 	if err != nil {
 		ctx.StatusCode(iris.StatusUnauthorized)
-		ctx.JSON(iris.Map{"status": iris.StatusUnauthorized, "message": "Invalid id token"})
+		ctx.JSON(iris.Map{"status": iris.StatusUnauthorized, "message": "invalid id token"})
 		return
 	}
 
 	// get user
 	if _, err = client.VerifyIDToken(context.Background(), idToken); err != nil {
 		ctx.StatusCode(iris.StatusInternalServerError)
-		ctx.JSON(iris.Map{"status": iris.StatusInternalServerError, "message": "Unable to verify token"})
+		ctx.JSON(iris.Map{"status": iris.StatusInternalServerError, "message": "unable to verify token"})
 		return
 	}
 

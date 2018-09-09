@@ -4,6 +4,8 @@ import (
 	"github.com/iris-contrib/middleware/cors"
 	"github.com/jianhan/goiris/bootstrap"
 	"github.com/jianhan/goiris/middleware"
+	"github.com/kataras/iris/cache"
+	"time"
 )
 
 // Configure registers the necessary routes to the app.
@@ -20,7 +22,7 @@ func Configure(b *bootstrap.Bootstrapper) {
 	{
 		googleRoutes := apiV1Routes.Party("/google")
 		{
-			googleRoutes.Get("/place", GetGooglePlaceHandler)
+			googleRoutes.Get("/place", cache.Handler(1*time.Hour), GetGooglePlaceHandler)
 		}
 	}
 
