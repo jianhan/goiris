@@ -8,7 +8,6 @@ import (
 	"github.com/jianhan/goiris/zomato"
 	"github.com/kataras/iris"
 	"github.com/leebenson/conform"
-	"github.com/sirupsen/logrus"
 	"gopkg.in/go-playground/validator.v9"
 	"net/http"
 )
@@ -78,7 +77,7 @@ func (z *zomatoRoutes) GetZomatoCitiesHandler(ctx iris.Context) {
 			ctx.StatusCode(iris.StatusUnprocessableEntity)
 			ctx.JSON(
 				ghttp.HttpError{
-					Message: "validation error",
+					Message: fmt.Sprintf("Validation error, %s", err.Error()),
 					Status:  iris.StatusUnprocessableEntity,
 					Data:    validationError,
 				},
@@ -87,6 +86,22 @@ func (z *zomatoRoutes) GetZomatoCitiesHandler(ctx iris.Context) {
 		}
 	}
 
-	logrus.Info(searchRequest.ToQueryString())
+	// call API to get cities
+	cities, err := z.commonAPI.Cities(searchRequest)
+	if err != nil {
+		ctx.StatusCode(iris.StatusInternalServerError)
+		ctx.JSON(
+			ghttp.HttpError{
+				Message: fmt.Sprintf("Unable to retrieve cities, %s", err.Error()),
+				Status:  iris.StatusInternalServerError,
+			},
+		)
+		return
+	}
+
+	//	return cities
+	ctx.StatusCode(iris.StatusOK)
+	ctx.JSON(cities)
+
 	return
 }
