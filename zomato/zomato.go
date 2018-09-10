@@ -89,7 +89,7 @@ func (c *commonAPI) Categories() ([]*Category, error) {
 }
 
 func (c *commonAPI) Cities(request *CitiesRequest) ([]*City, error) {
-	queryString, err := request.toQueryString()
+	queryString, err := request.ToQueryString()
 	if err != nil {
 		return nil, err
 	}
@@ -137,14 +137,14 @@ func (c *commonAPI) Cities(request *CitiesRequest) ([]*City, error) {
 }
 
 type CitiesRequest struct {
-	Q       string   `conform:"trim" json:"q"`
-	Lat     string   `conform:"trim" json:"lat"`
-	Lon     string   `conform:"trim" json:"lon"`
-	CityIDs []string `json:"city_ids"`
-	Count   string   `conform:"trim,num" json:"count"`
+	Q       string `conform:"trim" json:"q" schema:"q"`
+	Lat     string `conform:"trim" json:"lat" validate:"required,latitude" schema:"lat"`
+	Lon     string `conform:"trim" json:"lon" validate:"required,longitude" schema:"lng"`
+	CityIDs string `json:"city_ids" schema:"city_ids"`
+	Count   string `conform:"trim,num" json:"count" schema:"city_ids"`
 }
 
-func (c *CitiesRequest) toQueryString() (string, error) {
+func (c *CitiesRequest) ToQueryString() (string, error) {
 	if err := conform.Strings(c); err != nil {
 		return "", nil
 	}
@@ -159,14 +159,8 @@ func (c *CitiesRequest) toQueryString() (string, error) {
 	if c.Lon != "" {
 		parameters.Add("lon", c.Lon)
 	}
-	if len(c.CityIDs) > 0 {
-		logrus.Info(c.CityIDs)
-		cityIDSlice := []string{}
-		for _, v := range c.CityIDs {
-			cityIDSlice = append(cityIDSlice, v)
-		}
-		cityIDStr := strings.Join(cityIDSlice, ",")
-		parameters.Add("city_ids", cityIDStr)
+	if c.CityIDs != "" {
+		parameters.Add("city_ids", c.CityIDs)
 	}
 	if c.Count != "" {
 		parameters.Add("count", c.Count)

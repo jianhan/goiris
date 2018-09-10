@@ -97,7 +97,7 @@ func GetGooglePlaceHandler(ctx iris.Context) {
 			ctx.StatusCode(iris.StatusBadRequest)
 			ctx.JSON(
 				ghttp.HttpError{
-					Message: fmt.Sprintf("Validation error, %s", err.Error()),
+					Message: "Validation error",
 					Status:  http.StatusBadRequest,
 				},
 			)
@@ -113,7 +113,7 @@ func GetGooglePlaceHandler(ctx iris.Context) {
 			ctx.StatusCode(iris.StatusUnprocessableEntity)
 			ctx.JSON(
 				ghttp.HttpError{
-					Message: fmt.Sprintf("Validation error, %s", err.Error()),
+					Message: "Validation error",
 					Status:  iris.StatusUnprocessableEntity,
 					Data:    validationError,
 				},
