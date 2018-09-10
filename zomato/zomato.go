@@ -139,7 +139,7 @@ func (c *commonAPI) Cities(request *CitiesRequest) ([]*City, error) {
 type CitiesRequest struct {
 	Q       string `conform:"trim" json:"q" schema:"q"`
 	Lat     string `conform:"trim" json:"lat" validate:"required,latitude" schema:"lat"`
-	Lon     string `conform:"trim" json:"lon" validate:"required,longitude" schema:"lng"`
+	Lon     string `conform:"trim" json:"lon" validate:"required,longitude" schema:"lon"`
 	CityIDs string `json:"city_ids" schema:"city_ids"`
 	Count   string `conform:"trim,num" json:"count" schema:"city_ids"`
 }

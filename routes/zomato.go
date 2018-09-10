@@ -75,10 +75,6 @@ func (z *zomatoRoutes) GetZomatoCitiesHandler(ctx iris.Context) {
 		}
 
 		if len(validationError) > 0 {
-			logrus.Info(ghttp.HttpError{
-				Message: "test",
-				Status:  400,
-			}.ToIrisMap())
 			ctx.StatusCode(iris.StatusUnprocessableEntity)
 			ctx.JSON(
 				ghttp.HttpError{
@@ -92,4 +88,5 @@ func (z *zomatoRoutes) GetZomatoCitiesHandler(ctx iris.Context) {
 	}
 
 	logrus.Info(searchRequest.ToQueryString())
+	return
 }
